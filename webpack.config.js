@@ -19,6 +19,11 @@ module.exports = {
 	],
 	module: {
 		loaders: [{
+			test: /\.css$/,
+			loaders: ['style', 'css'],
+			include: path.join(__dirname, 'src')
+		},
+		{
 			test: /\.tsx?$/,
 			loaders: ['babel', 'ts'],
 			include: path.join(__dirname, 'src')
@@ -26,6 +31,6 @@ module.exports = {
 	},
 	resolve: {
 		root: [path.resolve('./src')],
-		extensions: ['', '.jsx', '.js', '.tsx', '.ts']
+		extensions: ['', '.jsx', '.js', '.tsx', '.ts', '.css']
 	}
 };

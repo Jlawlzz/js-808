@@ -1,0 +1,13 @@
+.pad{
+  height: 50px;
+  width: 50px;
+  color: white;
+}
+
+.on{
+  background-color: green;
+}
+
+.off{
+  background-color: red;
+}
