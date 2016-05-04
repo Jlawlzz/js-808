@@ -53,30 +53,40 @@ export default class App extends React.Component<IAppProps, IAppState> {
 
 	incrementCounter(){
 		this.state.counter = this.state.counter + 1
+    sequencer.updateActivePad(this.state.counter)
+
+    this.setState({counter: this.state.counter,
+                   kick: this.kickSequence(sequencer.kick),
+                   snare: this.snareSequence(sequencer.snare),
+                   hat: this.hatSequence(sequencer.hat)})
+
 	}
 
   updateSequenceCount(newNumber){
     sequencer.updateSequenceCount(newNumber);
     console.log(sequencer)
 
-    this.setState({counter: this.state.counter, kick: this.kickSequence(sequencer.kick), snare: this.snareSequence(sequencer.snare), hat: this.hatSequence(sequencer.hat)})
+    this.setState({counter: this.state.counter,
+                   kick: this.kickSequence(sequencer.kick),
+                   snare: this.snareSequence(sequencer.snare),
+                   hat: this.hatSequence(sequencer.hat)})
   }
 
   kickSequence(kicks){
     return kicks.map(function(kick){
-       return kick ? <div className="pad on"><h3>k +</h3></div> : <div className="pad off"><h3>k -</h3></div>;
+       return kick ? <div className="pad on"><h3>k+</h3></div> : <div className="pad off"><h3>k-</h3></div>;
     });
   }
 
   snareSequence(snares){
     return snares.map(function(snare){
-       return snare ? <div className="pad on"><h3>s +</h3></div> : <div className="pad off"><h3>s -</h3></div>;
+       return snare ? <div className="pad on"><h3>s+</h3></div> : <div className="pad off"><h3>s-</h3></div>;
     });
   }
 
   hatSequence(hats){
     return hats.map(function(hat){
-       return hat ? <div className="pad on"><h3>h +</h3></div> : <div className="pad off"><h3>h -</h3></div>;
+       return hat ? <div className="pad on"><h3>h+</h3></div> : <div className="pad off"><h3>h-</h3></div>;
     });
   }
 
@@ -92,9 +102,15 @@ export default class App extends React.Component<IAppProps, IAppState> {
 				<button onClick={() => this.updateSequenceCount(16)}>16</button>
 
 				<h1>click: {this.state.counter}</h1>
-				<h1>{this.state.kick}</h1>
-				<h1>{this.state.snare}</h1>
-				<h1>{this.state.hat}</h1>
+        <div className="pad-row">
+				    <h1>{this.state.kick}</h1>
+        </div>
+        <div className="pad-row">
+				    <h1>{this.state.snare}</h1>
+        </div>
+        <div className="pad-row">
+				    <h1>{this.state.hat}</h1>
+        </div>
 			</div>
 		);
 	}
