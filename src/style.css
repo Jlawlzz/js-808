@@ -1,7 +1,8 @@
 .pad{
-  height: 50px;
   width: 50px;
   color: white;
+  display: inline-block;
+  margin-right: 2vw;
 }
 
 .on{

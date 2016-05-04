@@ -28,36 +28,44 @@ class App extends React.Component {
     }
     incrementCounter() {
         this.state.counter = this.state.counter + 1;
+        sequencer.updateActivePad(this.state.counter);
+        this.setState({ counter: this.state.counter,
+            kick: this.kickSequence(sequencer.kick),
+            snare: this.snareSequence(sequencer.snare),
+            hat: this.hatSequence(sequencer.hat) });
     }
     updateSequenceCount(newNumber) {
         sequencer.updateSequenceCount(newNumber);
         console.log(sequencer);
-        this.setState({ counter: this.state.counter, kick: this.kickSequence(sequencer.kick), snare: this.snareSequence(sequencer.snare), hat: this.hatSequence(sequencer.hat) });
+        this.setState({ counter: this.state.counter,
+            kick: this.kickSequence(sequencer.kick),
+            snare: this.snareSequence(sequencer.snare),
+            hat: this.hatSequence(sequencer.hat) });
     }
     kickSequence(kicks) {
         return kicks.map(function (kick) {
             return kick ? React.createElement("div", {className: "pad on"}, 
-                React.createElement("h3", null, "k +")
+                React.createElement("h3", null, "k+")
             ) : React.createElement("div", {className: "pad off"}, 
-                React.createElement("h3", null, "k -")
+                React.createElement("h3", null, "k-")
             );
         });
     }
     snareSequence(snares) {
         return snares.map(function (snare) {
             return snare ? React.createElement("div", {className: "pad on"}, 
-                React.createElement("h3", null, "s +")
+                React.createElement("h3", null, "s+")
             ) : React.createElement("div", {className: "pad off"}, 
-                React.createElement("h3", null, "s -")
+                React.createElement("h3", null, "s-")
             );
         });
     }
     hatSequence(hats) {
         return hats.map(function (hat) {
             return hat ? React.createElement("div", {className: "pad on"}, 
-                React.createElement("h3", null, "h +")
+                React.createElement("h3", null, "h+")
             ) : React.createElement("div", {className: "pad off"}, 
-                React.createElement("h3", null, "h -")
+                React.createElement("h3", null, "h-")
             );
         });
     }
@@ -72,9 +80,15 @@ class App extends React.Component {
             React.createElement("h1", null, 
                 "click: ", 
                 this.state.counter), 
-            React.createElement("h1", null, this.state.kick), 
-            React.createElement("h1", null, this.state.snare), 
-            React.createElement("h1", null, this.state.hat)));
+            React.createElement("div", {className: "pad-row"}, 
+                React.createElement("h1", null, this.state.kick)
+            ), 
+            React.createElement("div", {className: "pad-row"}, 
+                React.createElement("h1", null, this.state.snare)
+            ), 
+            React.createElement("div", {className: "pad-row"}, 
+                React.createElement("h1", null, this.state.hat)
+            )));
     }
 }
 Object.defineProperty(exports, "__esModule", { value: true });
