@@ -43,45 +43,17 @@ export default class App extends React.Component<IAppProps, IAppState> {
 
     clock.evtChanged.attach((event: string): void => {
       console.log(event);
+      this.updateState()
     });
   }
 
-  primeTempoAdjust(event, that){
-    console.log(event.target)
-    that.setState({tick: that.state.tick,
-                   kick: sequencer.kick,
-                   snare: sequencer.snare,
-                   hat: sequencer.hat,
-                   tempo: event.target.value,
-                   running: that.state.running})
-  }
-
-	emitInterval() {
-		console.log('click')
-		this.incrementCounter()
-	}
-
-	incrementCounter(){
-		this.state.tick = this.state.tick + 1
-    sequencer.updateActivePad(this.state.tick)
-
-    this.setState({tick: this.state.tick,
-                   kick: sequencer.kick,
-                   snare: sequencer.snare,
-                   hat: sequencer.hat,
-                   tempo: this.state.tempo,
-                   running: this.state.running
-                  })
-
-	}
-
   updateState(){
-    this.setState({tick: this.state.tick,
+    this.setState({tick: clock.tick,
                    kick: this.state.kick,
                    snare: this.state.snare,
                    hat: this.state.hat,
-                   tempo: this.state.tempo,
-                   running: this.state.running
+                   tempo: clock.tempo,
+                   running: clock.running
                  })
   }
 

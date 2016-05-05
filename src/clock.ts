@@ -1,6 +1,6 @@
 ///<reference path="../typings/node/node.d.ts" />
 
-import {SyncEvent} from 'ts-events';
+import { SyncEvent } from 'ts-events';
 
 interface Clock {
   tempo: number;
