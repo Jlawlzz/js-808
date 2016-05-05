@@ -2,36 +2,31 @@
 const React = require('react');
 const sequencer_1 = require('./sequencer');
 const row_1 = require('./row');
+const clock_1 = require('./clock');
+const controls_1 = require('./controls');
 let sequencer = new sequencer_1.default([false], [false], [false]);
+let clock = new clock_1.default;
 let temp, running;
 class App extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { counter: 0,
+        this.state = { tick: clock.tick,
             kick: sequencer.kick,
             snare: sequencer.snare,
             hat: sequencer.hat,
-            tempo: 500,
-            running: false,
+            tempo: clock.tempo,
+            running: clock.running,
         };
-        console.log(this.state.kick);
     }
     componentDidMount() {
-        this.updateSequenceCount(4);
-    }
-    startSequencer() {
-        temp = setInterval(() => this.emitInterval(), this.state.tempo);
-        this.state.running = true;
-        this.updateState();
-    }
-    stopSequencer() {
-        clearInterval(temp);
-        this.state.running = false;
-        this.updateState();
+        sequencer.updateSequenceCount(4);
+        clock.evtChanged.attach((event) => {
+            console.log(event);
+        });
     }
     primeTempoAdjust(event, that) {
         console.log(event.target);
-        that.setState({ counter: that.state.counter,
+        that.setState({ tick: that.state.tick,
             kick: sequencer.kick,
             snare: sequencer.snare,
             hat: sequencer.hat,
@@ -43,9 +38,9 @@ class App extends React.Component {
         this.incrementCounter();
     }
     incrementCounter() {
-        this.state.counter = this.state.counter + 1;
-        sequencer.updateActivePad(this.state.counter);
-        this.setState({ counter: this.state.counter,
+        this.state.tick = this.state.tick + 1;
+        sequencer.updateActivePad(this.state.tick);
+        this.setState({ tick: this.state.tick,
             kick: sequencer.kick,
             snare: sequencer.snare,
             hat: sequencer.hat,
@@ -54,7 +49,7 @@ class App extends React.Component {
         });
     }
     updateState() {
-        this.setState({ counter: this.state.counter,
+        this.setState({ tick: this.state.tick,
             kick: this.state.kick,
             snare: this.state.snare,
             hat: this.state.hat,
@@ -62,18 +57,9 @@ class App extends React.Component {
             running: this.state.running
         });
     }
-    upTempo() {
-        this.state.tempo += 100;
-        this.updateState();
-    }
-    downTempo() {
-        this.state.tempo -= 100;
-        this.updateState();
-    }
     updateSequenceCount(newNumber) {
         sequencer.updateSequenceCount(newNumber);
-        console.log(sequencer);
-        this.setState({ counter: this.state.counter,
+        this.setState({ tick: this.state.tick,
             kick: sequencer.kick,
             snare: sequencer.snare,
             hat: sequencer.hat,
@@ -83,22 +69,14 @@ class App extends React.Component {
     }
     render() {
         return (React.createElement("div", null, 
-            this.state.running ? React.createElement("button", {onClick: () => this.stopSequencer()}, "stop")
-                : React.createElement("button", {onClick: () => this.startSequencer()}, "start"), 
-            React.createElement("h1", null, 
-                "Tempo: ", 
-                this.state.tempo), 
-            React.createElement("button", {onClick: () => this.upTempo()}, "speed"), 
-            React.createElement("br", null), 
-            React.createElement("button", {onClick: () => this.downTempo()}, "slow"), 
-            React.createElement("br", null), 
+            React.createElement(controls_1.default, {clock: clock}), 
             React.createElement("h2", null, "Set Sequencer To:"), 
             React.createElement("button", {onClick: () => this.updateSequenceCount(4)}, "4"), 
             React.createElement("button", {onClick: () => this.updateSequenceCount(8)}, "8"), 
             React.createElement("button", {onClick: () => this.updateSequenceCount(16)}, "16"), 
             React.createElement("h1", null, 
                 "click: ", 
-                this.state.counter), 
+                this.state.tick), 
             React.createElement("div", {className: "pad-row"}, 
                 React.createElement("h2", null, "kick:"), 
                 React.createElement(row_1.default, {pads: this.state.kick})), 
