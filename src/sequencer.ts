@@ -28,7 +28,7 @@ class Sequencer {
     }
 
     updateActivePad(tick: number){
-
+      
       let index = tick % this.kick.length
 
       console.log(index)

@@ -1,17 +1,20 @@
 import * as React from 'react';
 import Counter from './Counter';
-import clock from './clock';
 import Sequencer from './sequencer';
 import Row from './row'
+import Clock from './clock';
+import Controls from './controls';
+
 
 let sequencer = new Sequencer([false], [false], [false]);
+let clock = new Clock;
 
 interface IAppProps {
   dispatch?: (func: any) => void;
 }
 
 interface IAppState {
-	counter: number;
+	tick: number;
   kick: boolean[];
   snare: boolean[];
   hat: boolean[];
@@ -26,36 +29,26 @@ export default class App extends React.Component<IAppProps, IAppState> {
 	constructor(props) {
 		super(props);
 
-		this.state = { counter: 0,
+		this.state = { tick: clock.tick,
                    kick: sequencer.kick,
                    snare: sequencer.snare,
                    hat: sequencer.hat,
-                   tempo: 500,
-                   running: false,
+                   tempo: clock.tempo,
+                   running: clock.running,
                  };
-
-    console.log(this.state.kick)
 	}
 
   componentDidMount(){
-    this.updateSequenceCount(4)
+    sequencer.updateSequenceCount(4);
+
+    clock.evtChanged.attach((event: string): void => {
+      console.log(event);
+    });
   }
-
-	startSequencer(){
-		temp = setInterval(() => this.emitInterval(), this.state.tempo);
-    this.state.running = true;
-    this.updateState();
-	}
-
-	stopSequencer(){
-		clearInterval(temp);
-    this.state.running = false;
-    this.updateState();
-	}
 
   primeTempoAdjust(event, that){
     console.log(event.target)
-    that.setState({counter: that.state.counter,
+    that.setState({tick: that.state.tick,
                    kick: sequencer.kick,
                    snare: sequencer.snare,
                    hat: sequencer.hat,
@@ -69,10 +62,10 @@ export default class App extends React.Component<IAppProps, IAppState> {
 	}
 
 	incrementCounter(){
-		this.state.counter = this.state.counter + 1
-    sequencer.updateActivePad(this.state.counter)
+		this.state.tick = this.state.tick + 1
+    sequencer.updateActivePad(this.state.tick)
 
-    this.setState({counter: this.state.counter,
+    this.setState({tick: this.state.tick,
                    kick: sequencer.kick,
                    snare: sequencer.snare,
                    hat: sequencer.hat,
@@ -83,7 +76,7 @@ export default class App extends React.Component<IAppProps, IAppState> {
 	}
 
   updateState(){
-    this.setState({counter: this.state.counter,
+    this.setState({tick: this.state.tick,
                    kick: this.state.kick,
                    snare: this.state.snare,
                    hat: this.state.hat,
@@ -92,21 +85,10 @@ export default class App extends React.Component<IAppProps, IAppState> {
                  })
   }
 
-  upTempo(){
-    this.state.tempo += 100
-    this.updateState()
-  }
-
-  downTempo(){
-    this.state.tempo -= 100
-    this.updateState()
-  }
-
   updateSequenceCount(newNumber){
     sequencer.updateSequenceCount(newNumber);
-    console.log(sequencer)
 
-    this.setState({counter: this.state.counter,
+    this.setState({tick: this.state.tick,
                    kick: sequencer.kick,
                    snare: sequencer.snare,
                    hat: sequencer.hat,
@@ -120,23 +102,14 @@ export default class App extends React.Component<IAppProps, IAppState> {
 		return (
 			<div>
 
-        {this.state.running ? <button onClick={() => this.stopSequencer()}>stop</button>
-                            : <button onClick={() => this.startSequencer()}>start</button>}
-
-        <h1>Tempo: {this.state.tempo}</h1>
-
-        <button onClick={() => this.upTempo()}>speed</button>
-        <br></br>
-
-				<button onClick={() => this.downTempo()}>slow</button>
-        <br></br>
+        <Controls clock={clock} />
 
         <h2>Set Sequencer To:</h2>
 				<button onClick={() => this.updateSequenceCount(4)}>4</button>
 				<button onClick={() => this.updateSequenceCount(8)}>8</button>
 				<button onClick={() => this.updateSequenceCount(16)}>16</button>
 
-				<h1>click: {this.state.counter}</h1>
+				<h1>click: {this.state.tick}</h1>
         <div className="pad-row">
         <h2>kick:</h2>
             <Row pads={this.state.kick} />
