@@ -1,26 +1,42 @@
 "use strict";
 const React = require('react');
 const sequencer_1 = require('./sequencer');
+const row_1 = require('./row');
 let sequencer = new sequencer_1.default([false], [false], [false]);
-let initSteps = initSequencerSteps(8);
-function initSequencerSteps(steps) {
-    let stepsInit = [];
-    for (let i = 0; i <= steps; i++) {
-        stepsInit.push(false);
-    }
-    return stepsInit;
-}
+let temp, running;
 class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = { counter: 0,
-            kick: this.kickSequence(sequencer.kick),
-            snare: this.snareSequence(sequencer.snare),
-            hat: this.hatSequence(sequencer.hat) };
+            kick: sequencer.kick,
+            snare: sequencer.snare,
+            hat: sequencer.hat,
+            tempo: 500,
+            running: false,
+        };
         console.log(this.state.kick);
     }
-    onButtonClick() {
-        let temp = setInterval(() => this.emitInterval(), 1000);
+    componentDidMount() {
+        this.updateSequenceCount(4);
+    }
+    startSequencer() {
+        temp = setInterval(() => this.emitInterval(), this.state.tempo);
+        this.state.running = true;
+        this.updateState();
+    }
+    stopSequencer() {
+        clearInterval(temp);
+        this.state.running = false;
+        this.updateState();
+    }
+    primeTempoAdjust(event, that) {
+        console.log(event.target);
+        that.setState({ counter: that.state.counter,
+            kick: sequencer.kick,
+            snare: sequencer.snare,
+            hat: sequencer.hat,
+            tempo: event.target.value,
+            running: that.state.running });
     }
     emitInterval() {
         console.log('click');
@@ -30,48 +46,51 @@ class App extends React.Component {
         this.state.counter = this.state.counter + 1;
         sequencer.updateActivePad(this.state.counter);
         this.setState({ counter: this.state.counter,
-            kick: this.kickSequence(sequencer.kick),
-            snare: this.snareSequence(sequencer.snare),
-            hat: this.hatSequence(sequencer.hat) });
+            kick: sequencer.kick,
+            snare: sequencer.snare,
+            hat: sequencer.hat,
+            tempo: this.state.tempo,
+            running: this.state.running
+        });
+    }
+    updateState() {
+        this.setState({ counter: this.state.counter,
+            kick: this.state.kick,
+            snare: this.state.snare,
+            hat: this.state.hat,
+            tempo: this.state.tempo,
+            running: this.state.running
+        });
+    }
+    upTempo() {
+        this.state.tempo += 100;
+        this.updateState();
+    }
+    downTempo() {
+        this.state.tempo -= 100;
+        this.updateState();
     }
     updateSequenceCount(newNumber) {
         sequencer.updateSequenceCount(newNumber);
         console.log(sequencer);
         this.setState({ counter: this.state.counter,
-            kick: this.kickSequence(sequencer.kick),
-            snare: this.snareSequence(sequencer.snare),
-            hat: this.hatSequence(sequencer.hat) });
-    }
-    kickSequence(kicks) {
-        return kicks.map(function (kick) {
-            return kick ? React.createElement("div", {className: "pad on"}, 
-                React.createElement("h3", null, "k+")
-            ) : React.createElement("div", {className: "pad off"}, 
-                React.createElement("h3", null, "k-")
-            );
-        });
-    }
-    snareSequence(snares) {
-        return snares.map(function (snare) {
-            return snare ? React.createElement("div", {className: "pad on"}, 
-                React.createElement("h3", null, "s+")
-            ) : React.createElement("div", {className: "pad off"}, 
-                React.createElement("h3", null, "s-")
-            );
-        });
-    }
-    hatSequence(hats) {
-        return hats.map(function (hat) {
-            return hat ? React.createElement("div", {className: "pad on"}, 
-                React.createElement("h3", null, "h+")
-            ) : React.createElement("div", {className: "pad off"}, 
-                React.createElement("h3", null, "h-")
-            );
+            kick: sequencer.kick,
+            snare: sequencer.snare,
+            hat: sequencer.hat,
+            tempo: this.state.tempo,
+            running: this.state.running
         });
     }
     render() {
         return (React.createElement("div", null, 
-            React.createElement("button", {onClick: () => this.onButtonClick()}, "start timer"), 
+            this.state.running ? React.createElement("button", {onClick: () => this.stopSequencer()}, "stop")
+                : React.createElement("button", {onClick: () => this.startSequencer()}, "start"), 
+            React.createElement("h1", null, 
+                "Tempo: ", 
+                this.state.tempo), 
+            React.createElement("button", {onClick: () => this.upTempo()}, "speed"), 
+            React.createElement("br", null), 
+            React.createElement("button", {onClick: () => this.downTempo()}, "slow"), 
             React.createElement("br", null), 
             React.createElement("h2", null, "Set Sequencer To:"), 
             React.createElement("button", {onClick: () => this.updateSequenceCount(4)}, "4"), 
@@ -81,14 +100,14 @@ class App extends React.Component {
                 "click: ", 
                 this.state.counter), 
             React.createElement("div", {className: "pad-row"}, 
-                React.createElement("h1", null, this.state.kick)
-            ), 
+                React.createElement("h2", null, "kick:"), 
+                React.createElement(row_1.default, {pads: this.state.kick})), 
             React.createElement("div", {className: "pad-row"}, 
-                React.createElement("h1", null, this.state.snare)
-            ), 
+                React.createElement("h2", null, "snare:"), 
+                React.createElement(row_1.default, {pads: this.state.snare})), 
             React.createElement("div", {className: "pad-row"}, 
-                React.createElement("h1", null, this.state.hat)
-            )));
+                React.createElement("h2", null, "hat:"), 
+                React.createElement(row_1.default, {pads: this.state.hat}))));
     }
 }
 Object.defineProperty(exports, "__esModule", { value: true });

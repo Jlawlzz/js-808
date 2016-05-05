@@ -1,5 +1,5 @@
 .pad{
-  width: 50px;
+  width: 120px;
   color: white;
   display: inline-block;
   margin-right: 2vw;
@@ -11,4 +11,10 @@
 
 .off{
   background-color: red;
+}
+
+.selected {
+  border-width: thick;
+  border-color: black;
+  border-style: solid;
 }
