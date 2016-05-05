@@ -22,7 +22,6 @@ class App extends React.Component {
         sequencer.updateSequenceCount(4);
         clock.evtChanged.attach((event) => {
             console.log(event);
-            this.updateState();
         });
     }
     updateState() {

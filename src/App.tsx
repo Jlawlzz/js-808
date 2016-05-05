@@ -43,7 +43,6 @@ export default class App extends React.Component<IAppProps, IAppState> {
 
     clock.evtChanged.attach((event: string): void => {
       console.log(event);
-      this.updateState()
     });
   }
 
