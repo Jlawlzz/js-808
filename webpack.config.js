@@ -17,6 +17,9 @@ module.exports = {
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.NoErrorsPlugin()
 	],
+	resolveLoader: {
+    modulesDirectories: ['node_modules']
+  },
 	module: {
 		loaders: [{
 			test: /\.css$/,

@@ -3,8 +3,8 @@ import Counter from './Counter';
 import Sequencer from './sequencer';
 import Row from './row'
 import Clock from './clock';
-import Controls from './controls';
-
+import ClockControls from './clock-controls';
+import ClockEmitter from './clock-emitter';
 
 let sequencer = new Sequencer([false], [false], [false]);
 let clock = new Clock;
@@ -41,16 +41,16 @@ export default class App extends React.Component<IAppProps, IAppState> {
   componentDidMount(){
     sequencer.updateSequenceCount(4);
 
-    clock.evtChanged.attach((event: string): void => {
-      console.log(event);
+    ClockEmitter.on('change', ()=> {
+      this.updateState()
     });
   }
 
   updateState(){
     this.setState({tick: clock.tick,
-                   kick: this.state.kick,
-                   snare: this.state.snare,
-                   hat: this.state.hat,
+                   kick: sequencer.kick,
+                   snare: sequencer.snare,
+                   hat: sequencer.hat,
                    tempo: clock.tempo,
                    running: clock.running
                  })
@@ -73,7 +73,7 @@ export default class App extends React.Component<IAppProps, IAppState> {
 		return (
 			<div>
 
-        <Controls clock={clock} />
+        <ClockControls clock={clock} updateState={this.updateState} />
 
         <h2>Set Sequencer To:</h2>
 				<button onClick={() => this.updateSequenceCount(4)}>4</button>
