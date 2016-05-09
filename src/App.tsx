@@ -3,8 +3,8 @@ import Counter from './Counter';
 import Sequencer from './sequencer';
 import Row from './row'
 import Clock from './clock';
-import Controls from './controls';
-
+import ClockControls from './clock-controls';
+import ClockEmitter from './clock-emitter';
 
 let sequencer = new Sequencer([false], [false], [false]);
 let clock = new Clock;
@@ -41,47 +41,18 @@ export default class App extends React.Component<IAppProps, IAppState> {
   componentDidMount(){
     sequencer.updateSequenceCount(4);
 
-    clock.evtChanged.attach((event: string): void => {
-      console.log(event);
+    ClockEmitter.on('change', ()=> {
+      this.updateState()
     });
   }
 
-  primeTempoAdjust(event, that){
-    console.log(event.target)
-    that.setState({tick: that.state.tick,
-                   kick: sequencer.kick,
-                   snare: sequencer.snare,
-                   hat: sequencer.hat,
-                   tempo: event.target.value,
-                   running: that.state.running})
-  }
-
-	emitInterval() {
-		console.log('click')
-		this.incrementCounter()
-	}
-
-	incrementCounter(){
-		this.state.tick = this.state.tick + 1
-    sequencer.updateActivePad(this.state.tick)
-
-    this.setState({tick: this.state.tick,
-                   kick: sequencer.kick,
-                   snare: sequencer.snare,
-                   hat: sequencer.hat,
-                   tempo: this.state.tempo,
-                   running: this.state.running
-                  })
-
-	}
-
   updateState(){
-    this.setState({tick: this.state.tick,
-                   kick: this.state.kick,
-                   snare: this.state.snare,
-                   hat: this.state.hat,
-                   tempo: this.state.tempo,
-                   running: this.state.running
+    this.setState({tick: clock.tick,
+                   kick: sequencer.kick,
+                   snare: sequencer.snare,
+                   hat: sequencer.hat,
+                   tempo: clock.tempo,
+                   running: clock.running
                  })
   }
 
@@ -102,7 +73,7 @@ export default class App extends React.Component<IAppProps, IAppState> {
 		return (
 			<div>
 
-        <Controls clock={clock} />
+        <ClockControls clock={clock} updateState={this.updateState} />
 
         <h2>Set Sequencer To:</h2>
 				<button onClick={() => this.updateSequenceCount(4)}>4</button>

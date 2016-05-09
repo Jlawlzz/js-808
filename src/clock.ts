@@ -1,12 +1,10 @@
-///<reference path="../typings/node/node.d.ts" />
 
-import {SyncEvent} from 'ts-events';
+import ClockEmitter from './clock-emitter'
 
 interface Clock {
   tempo: number;
   tick: number;
   running: boolean;
-  evtChanged: SyncEvent<any>
 }
 
 let temp;
@@ -17,45 +15,44 @@ class Clock {
     this.tick = 0;
     this.tempo = 300;
     this.running = false;
-    this.evtChanged = new SyncEvent<any>();
   }
 
 
   setMetro(time: number) {
   	this.tempo = time;
-    this.evtChanged.post('tempo');
+    ClockEmitter.emit('change');
   }
 
   startMetro() {
     this.running = true
-  	temp = setInterval(() => this.triggerTick(), this.tempo)
-    this.evtChanged.post('start-metro');
+  	temp = setInterval(this.triggerTick(), this.tempo)
+    ClockEmitter.emit('change');
   }
 
   stopMetro() {
     this.running = false
     temp.clearInterval()
-    this.evtChanged.post('stahp-metro');
+    ClockEmitter.emit('change');
   }
 
   triggerTick() {
     this.tick += 1
-    this.evtChanged.post('tick');
+    ClockEmitter.emit('change');
   }
 
   resetTick() {
     this.tick = 0
-    this.evtChanged.post('tick');
+    ClockEmitter.emit('change');
   }
 
   upTempo() {
     this.tempo += 100
-    this.evtChanged.post('tempo');
+    ClockEmitter.emit('change');
   }
 
   downTempo() {
     this.tempo -= 100
-    this.evtChanged.post('tempo');
+    ClockEmitter.emit('change');
   }
 
 }

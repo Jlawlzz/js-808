@@ -1,42 +1,41 @@
 "use strict";
-const ts_events_1 = require('ts-events');
+const clock_emitter_1 = require('./clock-emitter');
 let temp;
 class Clock {
     constructor() {
         this.tick = 0;
         this.tempo = 300;
         this.running = false;
-        this.evtChanged = new ts_events_1.SyncEvent();
     }
     setMetro(time) {
         this.tempo = time;
-        this.evtChanged.post('tempo');
+        clock_emitter_1.default.emit('change');
     }
     startMetro() {
         this.running = true;
-        temp = setInterval(() => this.triggerTick(), this.tempo);
-        this.evtChanged.post('start-metro');
+        temp = setInterval(this.triggerTick(), this.tempo);
+        clock_emitter_1.default.emit('change');
     }
     stopMetro() {
         this.running = false;
         temp.clearInterval();
-        this.evtChanged.post('stahp-metro');
+        clock_emitter_1.default.emit('change');
     }
     triggerTick() {
         this.tick += 1;
-        this.evtChanged.post('tick');
+        clock_emitter_1.default.emit('change');
     }
     resetTick() {
         this.tick = 0;
-        this.evtChanged.post('tick');
+        clock_emitter_1.default.emit('change');
     }
     upTempo() {
         this.tempo += 100;
-        this.evtChanged.post('tempo');
+        clock_emitter_1.default.emit('change');
     }
     downTempo() {
         this.tempo -= 100;
-        this.evtChanged.post('tempo');
+        clock_emitter_1.default.emit('change');
     }
 }
 Object.defineProperty(exports, "__esModule", { value: true });

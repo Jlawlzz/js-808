@@ -1,6 +1,6 @@
 "use strict";
 const React = require('react');
-class Controls extends React.Component {
+class ClockControls extends React.Component {
     render() {
         return (React.createElement("div", null, 
             this.props.clock.running ? React.createElement("button", {onClick: () => this.props.clock.stopMetro()}, "stop")
@@ -15,4 +15,4 @@ class Controls extends React.Component {
     }
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = Controls;
+exports.default = ClockControls;

@@ -2,16 +2,19 @@
   "version": "v4",
   "repo": "borisyankov/DefinitelyTyped",
   "ref": "master",
-  "path": "typings",
-  "bundle": "typings/tsd.d.ts",
+  "path": "src/typings",
+  "bundle": "src/typings/tsd.d.ts",
   "installed": {
     "react/react.d.ts": {
-      "commit": "fb2b3b1e068c9ff7d8f9b0851c08d37d96c95c38"
+      "commit": "067edc80b9b70a1a4f342a53e7dc1dd00708d3fd"
     },
     "react/react-dom.d.ts": {
-      "commit": "fb2b3b1e068c9ff7d8f9b0851c08d37d96c95c38"
+      "commit": "067edc80b9b70a1a4f342a53e7dc1dd00708d3fd"
     },
     "node/node.d.ts": {
+      "commit": "067edc80b9b70a1a4f342a53e7dc1dd00708d3fd"
+    },
+    "eventemitter3/eventemitter3.d.ts": {
       "commit": "067edc80b9b70a1a4f342a53e7dc1dd00708d3fd"
     }
   }
